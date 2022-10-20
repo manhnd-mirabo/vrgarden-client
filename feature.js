@@ -11,19 +11,43 @@ function makeid(length) {
     return result;
 }
 
-function toggleVoice(status) {
-    console.log('CLick voice: '  + status);
+function getNumberItemFriendVideo(id) {
+    let arrayFriendVideos = document.getElementsByClassName("friend-box");
+    let n = 0;
+    for (let i = 0; i < arrayFriendVideos.length; i++) {
+        if (arrayFriendVideos[i].hasAttribute("id")) {
+            if (arrayFriendVideos[i].getAttribute("id") === id) {
+                n = i;
+            }
+        }
+    }
+    return n + 1;
 }
 
-function toggleVideo(status) {
+function toggleVoice(status, id) {
+    if (id === "OWNER") {
+        console.log("toggle voice in owner");
+    } else {
+        console.log('CLick in element number: ' + getNumberItemFriendVideo(id));
+    }
+    console.log('CLick voice: ' + status);
+}
+
+function toggleVideo(status, id) {
+    if (id === "OWNER") {
+        console.log("toggle voice in owner");
+    } else {
+        console.log('CLick in element number: ' + getNumberItem(id));
+    }
     console.log('CLick Video: ' + status);
 }
 
 function addItem(name, statusMic, statusCamera) {
+    let id = 'friend-box-' + makeid(5);
     let elementHtml =  `
-        <div class="friend-box" id="friend-box-${makeid(5)}">
+        <div class="friend-box" id="${id}">
         <video class="video" autoplay></video>
-        
+
             <div class="info">
                 <div class="name">
                     <span class="name-user">
@@ -31,10 +55,10 @@ function addItem(name, statusMic, statusCamera) {
                     </span>
                 </div>
                 <div class="button-group">
-                    <span class="button-voice" onclick="toggleVoice(${statusMic})">
+                    <span class="button-voice" onclick="toggleVoice(${statusMic}, '${id}')">
                         <i class="fa fa-volume-up" aria-hidden="true"></i>
                     </span>
-                    <span class="button-video" onclick="toggleVideo(${statusCamera})">
+                    <span class="button-video" onclick="toggleVideo(${statusCamera}, '${id}')">
                         <i class="fa fa-video-camera" aria-hidden="true"></i>
                     </span>
                 </div>
@@ -52,3 +76,13 @@ function removeItem(id) {
 
 // addItem("manh", true, false)
 // removeItem("friend-box-uoOWZ")
+
+function removeItemFriendVideoByNum(n) {
+    let arrayFriendVideos = document.getElementsByClassName("friend-box");
+    arrayFriendVideos[n-1].remove();
+}
+
+function getItemFriendVideo(n) {
+    let arrayFriendVideos = document.getElementsByClassName("friend-box");
+    return arrayFriendVideos[n].children[0];
+}
