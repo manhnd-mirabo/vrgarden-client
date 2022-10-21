@@ -5,16 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vrgarden - voice</title>
-    <link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="stylesheet" href="js/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 <body onload="syncShowMyFace()">
+<div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width="975" height="979" style="cursor: default;"></canvas>
+    </div>
     <div class="container">
         <div id="box-chat">
             <div class="menu-header">
                 <span class="title">
-                    1 dong chu tieng nhat
+                    ルームメンバー
                     <span id="close-button">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </span>
@@ -22,59 +26,18 @@
             </div>
 
             <div id="content-video">
-                <div class="owner-box">
-                    <video class="video" id="myVideo" autoplay muted></video>
-
-                    <div class="info">
-                        <div class="name">
-                            <span class="name-user">
-                                Owner
-                            </span>
-                        </div>
-                        
-                        <div class="button-group">
-                            <span class="button-voice" onclick="toggleVoice(true, 'OWNER')">
-                                <i class="fa fa-volume-up" aria-hidden="true"></i>
-                            </span>
-                            <span class="button-video" onclick="toggleVideo(true, 'OWNER')">
-                                <i class="fa fa-video-camera" aria-hidden="true"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="friend-box">
-                    <video class="video" autoplay></video>
-
-                    <div class="info">
-                        <div class="name">
-                            <span class="name-user">
-                                Friend
-                            </span>
-                        </div>
-                        <div class="button-group">
-                            <span class="button-voice">
-                                <i class="fa fa-volume-up" aria-hidden="true"></i>
-                            </span>
-                            <span class="button-video">
-                                <i class="fa fa-video-camera" aria-hidden="true"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                
+  
             </div>
 
         </div>
     </div>
 
     <div id="feature">
-        <span id="toggle-video">Show feature call</span>
+        <span id="toggle-video">ルームメンバー</span>
     </div>
 
-    <script src="main.js"></script>
-    <script src="display.js"></script>
-    <script src="feature.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/display.js"></script>
+    <script src="js/feature.js"></script>
 </body>
 </html>

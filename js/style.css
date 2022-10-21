@@ -56,8 +56,8 @@ body {
 #feature {
     position: absolute;
     display: none;
-    top: 45%;
-    left: 40%;
+    top: 1%;
+    right: 1%;
     background-color: #28A398;
     height: 20px;
     padding: 10px;

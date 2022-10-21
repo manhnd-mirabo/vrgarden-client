@@ -37,16 +37,23 @@ function toggleVideo(status, id) {
     if (id === "OWNER") {
         console.log("toggle voice in owner");
     } else {
-        console.log('CLick in element number: ' + getNumberItem(id));
+        console.log('CLick in element number: ' + getNumberItemFriendVideo(id));
     }
     console.log('CLick Video: ' + status);
 }
 
+function addOwnItem(name, statusMic, statusCamera) {
+	addItemVideo(true, name, statusMic, statusCamera)
+}
 function addItem(name, statusMic, statusCamera) {
-    let id = 'friend-box-' + makeid(5);
+	addItemVideo(false, name, statusMic, statusCamera)
+}
+function addItemVideo(isMe, name, statusMic, statusCamera) {
+	var idstr = isMe ? "owner-box" : "friend-box";
+    let id = idstr + makeid(5);
     let elementHtml =  `
         <div class="friend-box" id="${id}">
-        <video class="video" autoplay></video>
+        <video class="video" id="myVideo" autoplay></video>
 
             <div class="info">
                 <div class="name">

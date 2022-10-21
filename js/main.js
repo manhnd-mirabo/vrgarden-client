@@ -12,16 +12,16 @@ const ICE_CONFIGURATION = {
     ],
 }
 
-let myVideo = document.getElementById('myVideo');
-let publishPeerConnection = new RTCPeerConnection(ICE_CONFIGURATION);
-
 function syncShowMyFace() {
-    console.log('show my face')
-    setTimeout(() => (async () => await showMyFace())(), 2000)
+    console.log('show my face');
+    setTimeout(() => (async () => await showMyFace())(), 2000);
 }
 
 async function showMyFace() {
+	addOwnItem("Own", true, true);
     console.log('Request userMedia to show my face...')
+	let myVideo = document.getElementById('myVideo');
+	let publishPeerConnection = new RTCPeerConnection(ICE_CONFIGURATION);
     let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     myVideo.srcObject = stream;
     publishPeerConnection.addStream(stream);
