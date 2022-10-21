@@ -1,21 +1,12 @@
-body {
-    margin: 0;
-    background-color: rgb(119, 122, 67);
-    height: 100vh;
-    width: 100%;
-}
 
 .container {
     height: inherit;
-    width: inherit;
-    background-image: url("https://cdn.akamai.steamstatic.com/steam/apps/1086850/ss_d82e43a6dde48043640e6653034beb1a1968a6b8.1920x1080.jpg?t=1657724254");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    width: 340px;
     display: flex;
-    justify-content: flex-end;
-    position: relative;
-    z-index: 2;
+    justify-content: flex-start;
+    position: absolute;
+	z-index: 2;
+    right: 0;
 }
 
 #box-chat {
@@ -24,7 +15,9 @@ body {
     width: 340px;
     overflow-y: auto;
     display: none;
-    z-index: 3;
+	z-index: 3;
+    right: 0;
+    position: absolute;
 }
 
 .menu-header {
@@ -56,18 +49,16 @@ body {
 }
 
 #feature {
-    height: 40px;
-    width: 240px;
     position: absolute;
     display: none;
-    top: calc(50vh - ( 40px  / 2));
-    left: calc(50vw - (240px / 2)); 
+    top: 1%;
+    right: 1%;
     background-color: #28A398;
+    height: 45px;
     padding: 10px;
-    display: inline-block;
     cursor: pointer;
     border-radius: 20px;
-    z-index: 2;
+	z-index: 5;
     text-align: center;
 }
 

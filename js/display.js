@@ -11,3 +11,18 @@ featureBtn.addEventListener("click", function() {
     document.getElementById("feature").style.display = 'none';
 });
 
+function toogleFeatureBtn(bool) {
+    if(!bool) {
+        document.getElementById("feature").style.display = 'none';
+    } else {
+        document.getElementById("feature").style.display = 'inline-block';
+    }
+}
+
+function toogleBoxChat(bool) {
+    if(!bool) {
+        document.getElementById("box-chat").style.display = 'none';
+    } else {
+        document.getElementById("box-chat").style.display = 'inline-block';
+    }
+}

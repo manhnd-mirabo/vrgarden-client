@@ -20,9 +20,9 @@ function syncShowMyFace() {
 async function showMyFace() {
 	addOwnItem("Own", true, true);
     console.log('Request userMedia to show my face...')
-	let myVideo = document.getElementById('myVideo');
-	let publishPeerConnection = new RTCPeerConnection(ICE_CONFIGURATION);
-    let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-    myVideo.srcObject = stream;
-    publishPeerConnection.addStream(stream);
+	//let myVideo = document.getElementById('myVideo');
+	//let publishPeerConnection = new RTCPeerConnection(ICE_CONFIGURATION);
+    //let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    //myVideo.srcObject = stream;
+    //publishPeerConnection.addStream(stream);
 }

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>TakashoVR</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
+    <link rel="stylesheet" href="TemplateData/style.css" />
+	
+	<link rel="stylesheet" href="js/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	
+  </head>
+  <body class="dark" onload="syncShowMyFace()">
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas"></canvas>
+    </div>
+    <div id="loading-cover" style="display: none;">
+      <div id="unity-loading-bar">
+        <div id="unity-logo">
+          <img src="logo.png" style="width: 300px; height: 200px;" />
+        </div>
+        <div id="unity-progress-bar-empty" style="display: none;">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+    </div>
+    <div id="unity-fullscreen-button" style="display: none;"></div>
+    <div id="media-receiver"></div>
+    
+    <!-- <div class="container"> -->
+        <div id="box-chat">
+            <div class="menu-header">
+                <span class="title">
+                    ルームメンバー
+                    <span id="close-button">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </span>
+                </span>
+            </div>
+
+            <div id="content-video">
+  
+            </div>
+
+        </div>
+    <!-- </div> -->
+
+    <div id="feature">
+        <span id="toggle-video">ルームメンバー</span>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/display.js"></script>
+    <script src="js/feature.js"></script>
+
+    <script>
+            const hideFullScreenButton = "";
+            const buildUrl = "Build";
+            const loaderUrl = buildUrl + "/WebGL.loader.js";
+            const config = {
+              dataUrl: buildUrl + "/WebGL.data",
+              frameworkUrl: buildUrl + "/WebGL.framework.js",
+              codeUrl: buildUrl + "/WebGL.wasm",
+              streamingAssetsUrl: "StreamingAssets",
+              companyName: "Takasho",
+              productName: "TakashoVR",
+              productVersion: "1.0.0",
+            };
+
+            const container = document.querySelector("#unity-container");
+            const canvas = document.querySelector("#unity-canvas");
+            const loadingCover = document.querySelector("#loading-cover");
+            const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+            const progressBarFull = document.querySelector("#unity-progress-bar-full");
+            const fullscreenButton = document.querySelector("#unity-fullscreen-button");
+            //const spinner = document.querySelector('.spinner');
+
+            const canFullscreen = (function() {
+              for (const key of [
+                  'exitFullscreen',
+                  'webkitExitFullscreen',
+                  'webkitCancelFullScreen',
+                  'mozCancelFullScreen',
+                  'msExitFullscreen',
+                ]) {
+                if (key in document) {
+                  return true;
+                }
+              }
+              return false;
+            }());
+
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+              container.className = "unity-mobile";
+              config.devicePixelRatio = 1;
+            }
+            loadingCover.style.display = "";
+
+            const script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+      	  	InGame();
+      	  }
+            //   createUnityInstance(canvas, config, (progress) => {
+            //     spinner.style.display = "none";
+            //     progressBarEmpty.style.display = "";
+            //     progressBarFull.style.width = `${100 * progress}%`;
+            //   }).then((unityInstance) => {
+            //     loadingCover.style.display = "none";
+            //     if (canFullscreen) {
+            //       if (!hideFullScreenButton) {
+            //         fullscreenButton.style.display = "";
+            //       }
+            //       fullscreenButton.onclick = () => {
+            //         unityInstance.SetFullscreen(1);
+            //       };
+            //     }
+            //   }).catch((message) => {
+            //     alert(message);
+            //   });
+            // };
+            document.body.appendChild(script);
+    </script>
+    <script>
+      function InGame() {
+        createUnityInstance(canvas, config, (progress) => {
+          //spinner.style.display = "none";
+          progressBarEmpty.style.display = ''
+          progressBarFull.style.width = `${100 * progress}%`
+        })
+          .then((unityInstance) => {
+            MyGameInstance = unityInstance;
+            loadingCover.style.display = 'none'
+            if (canFullscreen) {
+              if (!hideFullScreenButton) {
+                fullscreenButton.style.display = ''
+              }
+              fullscreenButton.onclick = () => {
+                unityInstance.SetFullscreen(1)
+              }
+            }
+          })
+          .catch((message) => {
+            alert(message)
+          })
+      }
+
+      // call support
+      var peers = {}
+
+      var medias = {}
+      function AddMediaReceiver(id) {
+        RemoveMediaReceiver(id)
+        const container = document.getElementById('media-receiver')
+        var audio = new Audio()
+        audio.id = id
+        audio.autoplay = true
+        container.append(audio)
+        medias[id] = audio
+
+        return audio
+      }
+
+      function RemoveMediaReceiver(id) {
+        if (medias[id]) {
+          medias[id].remove()
+        }
+      }
+
+      async function CreatePeerFromOfferAsync(id, sdpOffer, configuration) {
+        /*
+  const configuration = {
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+  }
+  */
+        const peerConnection = new RTCPeerConnection(configuration)
+        peerConnection.id = id
+        console.log('CREATE PEER ID A: ' + id)
+        SendCreated(id)
+        peerConnection.addEventListener('icecandidate', (event) => {
+          if (event.candidate) {
+            SendIceCandidate(peerConnection.id, event.candidate)
+          }
+        })
+
+        peerConnection.addEventListener('connectionstatechange', (event) => {
+          if (peerConnection.connectionState === 'connected') {
+            console.log('Peer connected')
+          }
+        })
+
+        peerConnection.ontrack = async (event) => {
+          console.log(
+            'ontrack ' +
+              JSON.stringify(event.streams) +
+              JSON.stringify(event.track),
+          )
+          var remoteAudio = await AddMediaReceiver(id)
+
+          if (event.streams && event.streams[0]) {
+            remoteAudio.srcObject = event.streams[0]
+          } else {
+            let inboundStream = new MediaStream()
+            inboundStream.addTrack(event.track)
+            remoteAudio.srcObject = inboundStream
+          }
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        })
+        stream
+          .getTracks()
+          .forEach((track) => peerConnection.addTrack(track, stream))
+        peerConnection.setRemoteDescription(JSON.parse(sdpOffer))
+        const answer = await peerConnection.createAnswer()
+        await peerConnection.setLocalDescription(answer)
+        SendSdp(peerConnection.id, false, answer)
+        peers[id] = peerConnection
+      }
+
+      async function CreatePeerAsync(id, configuration) {
+        /*
+  const configuration = {
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+  }
+  */
+        const peerConnection = new RTCPeerConnection(configuration)
+        peerConnection.id = id
+        SendCreated(id)
+        console.log('CREATE PEER ID P: ' + id)
+        peerConnection.addEventListener('icecandidate', (event) => {
+          if (event.candidate) {
+            SendIceCandidate(peerConnection.id, event.candidate)
+          }
+        })
+
+        peerConnection.addEventListener('connectionstatechange', (event) => {
+          if (peerConnection.connectionState === 'connected') {
+            console.log('Peer connected')
+          }
+        })
+
+        peerConnection.ontrack = async (event) => {
+          console.log(
+            'ontrack ' +
+              JSON.stringify(event.streams) +
+              JSON.stringify(event.track),
+          )
+          var remoteAudio = await AddMediaReceiver(id)
+
+          if (event.streams && event.streams[0]) {
+            remoteAudio.srcObject = event.streams[0]
+          } else {
+            let inboundStream = new MediaStream()
+            inboundStream.addTrack(event.track)
+            remoteAudio.srcObject = inboundStream
+          }
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        })
+        stream
+          .getTracks()
+          .forEach((track) => peerConnection.addTrack(track, stream))
+        const offer = await peerConnection.createOffer()
+        await peerConnection.setLocalDescription(offer)
+        SendSdp(peerConnection.id, true, offer)
+        peers[id] = peerConnection
+      }
+
+      async function DestroyPeerAsync(id) {
+        RemoveMediaReceiver(id)
+
+        const peerConnection = peers[id]
+        if (peerConnection) {
+          peerConnection.close()
+          peers[id] = null
+        }
+      }
+
+      async function FeedAnswerAsync(id, sdpAnswer) {
+        const peerConnection = peers[id]
+        if (peerConnection)
+          await peerConnection.setRemoteDescription(JSON.parse(sdpAnswer))
+      }
+
+      async function FeedIceCandidateAsync(id, iceCandidate) {
+        console.log('Feed ice ' + id + ' with candidate : ' + iceCandidate)
+        const peerConnection = peers[id]
+        if (peerConnection)
+          await peerConnection.addIceCandidate(JSON.parse(iceCandidate))
+      }
+
+      function SendSdp(id, isOffer, sdp) {
+        if (isOffer) {
+          MyGameInstance.SendMessage(
+            'VoiceCallSupportWebGL',
+            'SendSdpOffer',
+            JSON.stringify({
+              id: id,
+              data: sdp,
+            }),
+          )
+        } else {
+          MyGameInstance.SendMessage(
+            'VoiceCallSupportWebGL',
+            'SendSdpAnswer',
+            JSON.stringify({
+              id: id,
+              data: sdp,
+            }),
+          )
+        }
+      }
+
+      function SendIceCandidate(id, iceCandidate) {
+        MyGameInstance.SendMessage(
+          'VoiceCallSupportWebGL',
+          'SendIceCandidate',
+          JSON.stringify({
+            id: id,
+            data: iceCandidate,
+          }),
+        )
+      }
+
+      function SendCreated(id) {
+        MyGameInstance.SendMessage('VoiceCallSupportWebGL', 'Created', id)
+      }
+    </script>
+  </body>
+</html>
