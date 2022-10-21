@@ -15,6 +15,7 @@ body {
     display: flex;
     justify-content: flex-end;
     position: relative;
+    z-index: 2;
 }
 
 #box-chat {
@@ -54,20 +55,23 @@ body {
 }
 
 #feature {
+    height: 40px;
+    width: 240px;
     position: absolute;
     display: none;
-    top: 1%;
-    right: 1%;
+    top: calc(50vh - ( 40px  / 2));
+    left: calc(50vw - (240px / 2)); 
     background-color: #28A398;
-    height: 20px;
     padding: 10px;
     display: inline-block;
     cursor: pointer;
     border-radius: 20px;
+    z-index: 2;
+    text-align: center;
 }
 
 #toggle-video {
-    padding: 50px;
+    /* padding: 50px; */
     color: white;
 }
 
@@ -100,7 +104,7 @@ body {
     width: 80px;
     display: flex;
     justify-content: center;
-    padding: 4px 10px;
+    padding: 1px 10px;
     border-radius: 18px;
     font-size: 12px;
     height: 16px;
